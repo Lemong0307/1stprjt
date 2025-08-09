@@ -1,12 +1,17 @@
 // 이 파일은 Node.js 환경에서 실행됩니다.
 // Vercel이 이 파일을 자동으로 서버처럼 동작하게 만들어줍니다.
-// 최종 버전 (메뉴 필드명 수정 + 줄바꿈 처리 + 디버깅)
+// 완벽 버전 (필드명 수정 + 날짜 포맷 맞춤 + 줄바꿈 처리 + 디버깅)
 
 function formatDate(date) {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}${month}${day}`;
+}
+
+function formatKey(dateStr) {
+    // NEIS YYYYMMDD → YYYY-MM-DD 변환
+    return `${dateStr.slice(0,4)}-${dateStr.slice(4,6)}-${dateStr.slice(6,8)}`;
 }
 
 export default async function handler(request, response) {
@@ -45,24 +50,23 @@ export default async function handler(request, response) {
             const weekMenuData = data.mealServiceDietInfo[1].row;
 
             weekMenuData.forEach(item => {
-                const date = item.MLSV_YMD;
-                if (!dailyMenus[date]) {
-                    dailyMenus[date] = {};
+                const dateKey = formatKey(item.MLSV_YMD); // 날짜 포맷 변환
+                if (!dailyMenus[dateKey]) {
+                    dailyMenus[dateKey] = {};
                 }
 
-                // 필드명 DDISH_INFO → DDISH_NM 수정
                 const menuInfo = {
                     calories: item.CAL_INFO,
-                    menu: (item.DDISH_NM || "")
+                    menu: (item.DDISH_NM || "") // 🔹 필드명 수정
                         .split(/<br\s*\/?>|\n/g)
                         .map(menu => menu.trim())
                         .filter(m => m)
                 };
 
                 if (item.MMEAL_SC_NM === '중식') {
-                    dailyMenus[date].lunch = menuInfo;
+                    dailyMenus[dateKey].lunch = menuInfo;
                 } else if (item.MMEAL_SC_NM === '석식') {
-                    dailyMenus[date].dinner = menuInfo;
+                    dailyMenus[dateKey].dinner = menuInfo;
                 }
             });
         } else {
