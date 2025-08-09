@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2학년 7반 학습 페이지 (캐시 해결)</title>
+    <title>2학년 7반 학습 페이지 (최종판)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
@@ -15,7 +15,6 @@
 <body class="bg-gray-100 text-gray-800">
 
     <div class="container mx-auto p-4 sm:p-6 md:p-8">
-
         <header class="text-center mb-8">
             <h1 class="text-4xl md:text-5xl font-bold text-blue-600">2학년 7반 우리들의 공간</h1>
             <p class="text-gray-500 mt-2">함께 성장하는 우리 반을 위한 학습 허브</p>
@@ -23,25 +22,13 @@
 
         <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div class="lg:col-span-2 space-y-8">
-                
-                <!-- D-DAY 섹션 -->
                 <section id="d-day-section">
                     <h2 class="text-2xl font-bold mb-4 border-l-4 border-blue-500 pl-3">주요 학사일정 D-DAY</h2>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="bg-white p-5 rounded-xl shadow-md" data-date="2025-10-17">
-                            <h3 class="font-bold text-lg text-gray-700">중간고사</h3>
-                            <p class="text-gray-500 mt-1">2025년 10월 17일</p>
-                            <span class="d-day-badge text-white font-bold py-1 px-3 rounded-full mt-2 inline-block"></span>
-                        </div>
-                        <div class="bg-white p-5 rounded-xl shadow-md" data-date="2025-12-15">
-                            <h3 class="font-bold text-lg text-gray-700">기말고사</h3>
-                            <p class="text-gray-500 mt-1">2025년 12월 15일</p>
-                            <span class="d-day-badge text-white font-bold py-1 px-3 rounded-full mt-2 inline-block"></span>
-                        </div>
+                        <div class="bg-white p-5 rounded-xl shadow-md" data-date="2025-10-17"><h3 class="font-bold text-lg text-gray-700">중간고사</h3><p class="text-gray-500 mt-1">2025년 10월 17일</p><span class="d-day-badge text-white font-bold py-1 px-3 rounded-full mt-2 inline-block"></span></div>
+                        <div class="bg-white p-5 rounded-xl shadow-md" data-date="2025-12-15"><h3 class="font-bold text-lg text-gray-700">기말고사</h3><p class="text-gray-500 mt-1">2025년 12월 15일</p><span class="d-day-badge text-white font-bold py-1 px-3 rounded-full mt-2 inline-block"></span></div>
                     </div>
                 </section>
-
-                <!-- 급식 안내 섹션 -->
                 <section id="lunch-menu-section">
                     <h2 class="text-2xl font-bold mb-4 border-l-4 border-green-500 pl-3">이번 주 급식</h2>
                     <div id="lunch-menu-container" class="bg-white p-6 rounded-xl shadow-md min-h-[200px] flex justify-center items-center">
@@ -49,27 +36,10 @@
                     </div>
                 </section>
             </div>
-
-            <!-- Q&A 섹션 -->
             <div class="lg:col-span-1">
                 <section id="qna-section">
                     <h2 class="text-2xl font-bold mb-4 border-l-4 border-purple-500 pl-3">무엇이든 물어보세요!</h2>
-                    <div class="bg-white p-6 rounded-xl shadow-md">
-                        <a href="#" target="_blank" class="block w-full bg-purple-500 hover:bg-purple-600 text-white font-bold py-3 px-4 rounded-lg text-center mb-6">
-                            새로운 질문하기 (구글 폼)
-                        </a>
-                        <div class="space-y-4">
-                            <div class="qna-item">
-                                <div class="question cursor-pointer flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                                    <h4 class="font-semibold">Q. 수학 128쪽 3번 문제 풀이?</h4>
-                                    <span class="text-purple-500 transform transition-transform duration-300">▼</span>
-                                </div>
-                                <div class="answer p-3 border-t border-gray-200 text-gray-600">
-                                    <p>A. 판별식을 두 번 사용해야 풀 수 있어!</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md"><a href="#" target="_blank" class="block w-full bg-purple-500 hover:bg-purple-600 text-white font-bold py-3 px-4 rounded-lg text-center mb-6">새로운 질문하기 (구글 폼)</a><div class="space-y-4"><div class="qna-item"><div class="question cursor-pointer flex justify-between items-center p-3 bg-gray-50 rounded-lg"><h4 class="font-semibold">Q. 수학 128쪽 3번 문제 풀이?</h4><span class="text-purple-500 transform transition-transform duration-300">▼</span></div><div class="answer p-3 border-t border-gray-200 text-gray-600"><p>A. 판별식을 두 번 사용해야 풀 수 있어!</p></div></div></div></div>
                 </section>
             </div>
         </main>
@@ -80,42 +50,22 @@
             // D-DAY 및 Q&A 스크립트
             const today = new Date();
             today.setHours(0, 0, 0, 0);
-            document.querySelectorAll('[data-date]').forEach(item => {
-                const targetDate = new Date(item.dataset.date);
-                const timeDiff = targetDate.getTime() - today.getTime();
-                const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-                const badge = item.querySelector('.d-day-badge');
-                if (dayDiff > 0) { badge.textContent = `D-${dayDiff}`; badge.classList.add('bg-blue-500'); } 
-                else if (dayDiff === 0) { badge.textContent = 'D-DAY'; badge.classList.add('bg-red-500'); } 
-                else { badge.textContent = `D+${Math.abs(dayDiff)}`; badge.classList.add('bg-gray-500'); }
-            });
-            document.querySelectorAll('.qna-item .question').forEach(question => {
-                question.addEventListener('click', () => {
-                    question.classList.toggle('active');
-                    const arrow = question.querySelector('span');
-                    arrow.style.transform = question.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
-                });
-            });
-
+            document.querySelectorAll('[data-date]').forEach(item => { const targetDate = new Date(item.dataset.date); const timeDiff = targetDate.getTime() - today.getTime(); const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); const badge = item.querySelector('.d-day-badge'); if (dayDiff > 0) { badge.textContent = `D-${dayDiff}`; badge.classList.add('bg-blue-500'); } else if (dayDiff === 0) { badge.textContent = 'D-DAY'; badge.classList.add('bg-red-500'); } else { badge.textContent = `D+${Math.abs(dayDiff)}`; badge.classList.add('bg-gray-500'); } });
+            document.querySelectorAll('.qna-item .question').forEach(question => { question.addEventListener('click', () => { question.classList.toggle('active'); const arrow = question.querySelector('span'); arrow.style.transform = question.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)'; }); });
             fetchLunchMenu();
         });
 
         async function fetchLunchMenu() {
             const lunchMenuContainer = document.getElementById('lunch-menu-container');
             try {
-                // --- [최종 수정!] 캐시를 무시하기 위해 요청 주소에 현재 시간을 덧붙인다. ---
                 const response = await fetch(`/api/lunch?t=${new Date().getTime()}`);
-                
                 if (!response.ok) throw new Error('서버 응답 오류');
                 const data = await response.json();
                 if (data.error) throw new Error(data.error);
 
-                if (data.weekMenu && data.weekMenu.length > 0) {
+                if (data.dailyMenus && Object.keys(data.dailyMenus).length > 0) {
                     const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
                     let html = '<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 w-full">';
-                    
-                    const menuByDate = {};
-                    data.weekMenu.forEach(item => { menuByDate[item.date] = item; });
                     
                     const kstTime = new Date(new Date().getTime() + (9 * 60 * 60 * 1000));
                     const dayOfWeek = kstTime.getDay();
@@ -131,16 +81,27 @@
                         const yyyymmdd = `${currentDate.getFullYear()}${String(currentDate.getMonth() + 1).padStart(2, '0')}${String(currentDate.getDate()).padStart(2, '0')}`;
                         const dayName = daysOfWeek[currentDate.getDay()];
                         const dateString = `${currentDate.getMonth() + 1}/${currentDate.getDate()}`;
-                        const menuData = menuByDate[yyyymmdd];
+                        const dayData = data.dailyMenus[yyyymmdd];
 
                         html += `<div class="bg-gray-50 p-4 rounded-lg flex flex-col">`;
-                        html += `<div class="font-bold text-lg mb-1">${dateString} (${dayName})</div>`;
-                        if (menuData && menuData.menu.length > 0) {
-                            html += `<p class="text-sm text-gray-500 mb-2">${menuData.calories || ''}</p>`;
-                            html += `<ul class="text-sm space-y-1 flex-grow">`;
-                            menuData.menu.forEach(menu => { html += `<li>- ${menu}</li>`; });
-                            html += `</ul>`;
-                        } else {
+                        html += `<div class="font-bold text-lg mb-2 text-center">${dateString} (${dayName})</div>`;
+                        
+                        let contentAdded = false;
+                        if (dayData && dayData.lunch) {
+                            html += `<div><h4 class="font-semibold text-blue-600 mb-1">중식</h4><ul class="text-sm space-y-1">`;
+                            dayData.lunch.menu.forEach(menu => { html += `<li>- ${menu}</li>`; });
+                            html += `</ul></div>`;
+                            contentAdded = true;
+                        }
+                        if (dayData && dayData.dinner) {
+                            if(contentAdded) html += `<hr class="my-3">`;
+                            html += `<div><h4 class="font-semibold text-green-600 mb-1">석식</h4><ul class="text-sm space-y-1">`;
+                            dayData.dinner.menu.forEach(menu => { html += `<li>- ${menu}</li>`; });
+                            html += `</ul></div>`;
+                            contentAdded = true;
+                        }
+
+                        if (!contentAdded) {
                             html += `<div class="flex-grow flex items-center justify-center text-gray-400">급식 없음</div>`;
                         }
                         html += `</div>`;
