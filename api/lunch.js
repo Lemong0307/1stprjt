@@ -1,6 +1,6 @@
 // 이 파일은 Node.js 환경에서 실행됩니다.
 // Vercel이 이 파일을 자동으로 서버처럼 동작하게 만들어줍니다.
-// 최종 버전 (메뉴 파싱 디버깅 + 줄바꿈 처리)
+// (급식 메뉴 디버깅 버전)
 
 function formatDate(date) {
     const year = date.getFullYear();
@@ -12,7 +12,6 @@ function formatDate(date) {
 export default async function handler(request, response) {
     const { API_KEY, ATPT_OFCDC_SC_CODE, SD_SCHUL_CODE } = process.env;
 
-    // 환경변수 확인
     if (!API_KEY || !ATPT_OFCDC_SC_CODE || !SD_SCHUL_CODE) {
         console.error("환경변수(API_KEY, ATPT_OFCDC_SC_CODE, SD_SCHUL_CODE) 중 하나가 누락되었습니다.");
         return response.status(500).json({ error: '서버 환경변수가 설정되지 않았습니다.' });
@@ -42,6 +41,10 @@ export default async function handler(request, response) {
         const apiResponse = await fetch(URL);
         const data = await apiResponse.json();
 
+        // 📌 디버깅: API 응답 전체 출력
+        console.log("=== NEIS API 응답 원본 ===");
+        console.log(JSON.stringify(data, null, 2));
+
         const dailyMenus = {};
 
         if (data.mealServiceDietInfo && data.mealServiceDietInfo[1].row) {
@@ -53,7 +56,6 @@ export default async function handler(request, response) {
                     dailyMenus[date] = {};
                 }
 
-                // <br>, <br/>, 줄바꿈(\n) 모두 처리
                 const menuInfo = {
                     calories: item.CAL_INFO,
                     menu: (item.DDISH_INFO || "")
