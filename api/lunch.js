@@ -12,17 +12,20 @@ function formatDate(date) {
 export default async function handler(request, response) {
     const { API_KEY, ATPT_OFCDC_SC_CODE, SD_SCHUL_CODE } = process.env;
 
-    // 더 확실하게 다음 주를 찾는 날짜 계산 로직
+    // --- [수정된 부분!] 요일별로 조회할 주간을 결정하는 로직 강화 ---
     const today = new Date();
     const dayOfWeek = today.getDay(); // 0=일, 1=월, ..., 6=토
     let monday = new Date(today);
 
-    if (dayOfWeek === 6) { // 토요일이면 이틀 뒤 월요일
-        monday.setDate(today.getDate() + 2);
-    } else if (dayOfWeek === 0) { // 일요일이면 하루 뒤 월요일
-        monday.setDate(today.getDate() + 1);
-    } else { // 평일이면 현재 속한 주의 월요일
+    // 평일(월~금)이면 이번 주 월요일을 찾고,
+    // 토요일이면 (+2일 뒤) 다음 주 월요일을,
+    // 일요일이면 (+1일 뒤) 다음 주 월요일을 찾는다.
+    if (dayOfWeek >= 1 && dayOfWeek <= 5) { // 월요일(1) ~ 금요일(5)
         monday.setDate(today.getDate() - (dayOfWeek - 1));
+    } else if (dayOfWeek === 6) { // 토요일(6)
+        monday.setDate(today.getDate() + 2);
+    } else { // 일요일(0)
+        monday.setDate(today.getDate() + 1);
     }
 
     const friday = new Date(monday);
@@ -41,13 +44,11 @@ export default async function handler(request, response) {
             const weekMenuData = data.mealServiceDietInfo[1].row;
             
             const processedMenu = weekMenuData.map(item => {
-                // [수정된 부분!] DDISH_INFO가 있을 때만 split 하고, 없으면 빈 배열([])을 사용하도록 수정
                 const menuList = (item.DDISH_INFO || "").split('<br/>').map(menu => menu.replace(/\s*\([\d\.]+\)/g, '').trim());
-                
                 return {
                     date: item.MLSV_YMD,
                     calories: item.CAL_INFO,
-                    menu: menuList.filter(m => m) // 혹시 모를 빈 항목 제거
+                    menu: menuList.filter(m => m)
                 };
             });
 
