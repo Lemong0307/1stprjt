@@ -12,20 +12,25 @@ function formatDate(date) {
 export default async function handler(request, response) {
     const { API_KEY, ATPT_OFCDC_SC_CODE, SD_SCHUL_CODE } = process.env;
 
-    // --- [수정된 부분!] 요일별로 조회할 주간을 결정하는 로직 강화 ---
-    const today = new Date();
-    const dayOfWeek = today.getDay(); // 0=일, 1=월, ..., 6=토
-    let monday = new Date(today);
+    // --- [최종 수정!] 시차(Timezone) 문제를 해결하기 위한 로직 ---
+    // 1. 현재 UTC 시간을 가져온다.
+    const now = new Date(); 
+    // 2. UTC와 한국 표준시(KST)의 시차(9시간)를 밀리초로 계산한다.
+    const KST_OFFSET = 9 * 60 * 60 * 1000;
+    // 3. 현재 UTC 시간에 시차를 더해, 항상 정확한 한국 시간을 기준으로 날짜 객체를 만든다.
+    const kstTime = new Date(now.getTime() + KST_OFFSET);
 
-    // 평일(월~금)이면 이번 주 월요일을 찾고,
-    // 토요일이면 (+2일 뒤) 다음 주 월요일을,
-    // 일요일이면 (+1일 뒤) 다음 주 월요일을 찾는다.
+    const dayOfWeek = kstTime.getDay(); // 0=일, 1=월, ..., 6=토
+    let monday = new Date(kstTime);
+
+    // 평일(월~금)이면 이번 주 월요일을,
+    // 주말(토,일)이면 다음 주 월요일을 찾도록 로직을 명확하게 수정한다.
     if (dayOfWeek >= 1 && dayOfWeek <= 5) { // 월요일(1) ~ 금요일(5)
-        monday.setDate(today.getDate() - (dayOfWeek - 1));
+        monday.setDate(kstTime.getDate() - (dayOfWeek - 1));
     } else if (dayOfWeek === 6) { // 토요일(6)
-        monday.setDate(today.getDate() + 2);
+        monday.setDate(kstTime.getDate() + 2);
     } else { // 일요일(0)
-        monday.setDate(today.getDate() + 1);
+        monday.setDate(kstTime.getDate() + 1);
     }
 
     const friday = new Date(monday);
