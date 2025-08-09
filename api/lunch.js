@@ -1,3 +1,6 @@
+// 이 파일은 Node.js 환경에서 실행됩니다.
+// Vercel이 이 파일을 자동으로 서버처럼 동작하게 만들어줍니다.
+
 // 날짜를 YYYYMMDD 형식으로 변환하는 헬퍼 함수
 function formatDate(date) {
     const year = date.getFullYear();
@@ -14,7 +17,6 @@ export default async function handler(request, response) {
     const dayOfWeek = today.getDay(); // 0=일, 1=월, ..., 6=토
     let monday = new Date(today);
 
-    // 현재 요일에 따라 이번 주 또는 다음 주 월요일을 기준으로 설정
     if (dayOfWeek === 6) { // 토요일이면 이틀 뒤 월요일
         monday.setDate(today.getDate() + 2);
     } else if (dayOfWeek === 0) { // 일요일이면 하루 뒤 월요일
@@ -37,12 +39,20 @@ export default async function handler(request, response) {
 
         if (data.mealServiceDietInfo && data.mealServiceDietInfo[1].row) {
             const weekMenuData = data.mealServiceDietInfo[1].row;
-            const processedMenu = weekMenuData.map(item => ({
-                date: item.MLSV_YMD,
-                calories: item.CAL_INFO,
-                menu: item.DDISH_INFO.split('<br/>').map(menu => menu.replace(/\s*\([\d\.]+\)/g, '').trim())
-            }));
+            
+            const processedMenu = weekMenuData.map(item => {
+                // [수정된 부분!] DDISH_INFO가 있을 때만 split 하고, 없으면 빈 배열([])을 사용하도록 수정
+                const menuList = (item.DDISH_INFO || "").split('<br/>').map(menu => menu.replace(/\s*\([\d\.]+\)/g, '').trim());
+                
+                return {
+                    date: item.MLSV_YMD,
+                    calories: item.CAL_INFO,
+                    menu: menuList.filter(m => m) // 혹시 모를 빈 항목 제거
+                };
+            });
+
             response.status(200).json({ weekMenu: processedMenu });
+
         } else if (data.RESULT && data.RESULT.CODE === 'INFO-200') {
             response.status(200).json({ weekMenu: [] });
         } else {
