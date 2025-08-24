@@ -1,6 +1,6 @@
 // 이 파일은 Node.js 환경에서 실행됩니다.
 // Vercel이 이 파일을 자동으로 서버처럼 동작하게 만들어줍니다.
-// 최종 완성 버전 (필드명 수정 및 안정성 강화)
+// 최종 완성 버전 (확인된 사실 기반 로직)
 
 function formatDate(date) {
     const year = date.getFullYear();
@@ -44,18 +44,21 @@ export default async function handler(request, response) {
                     dailyMenus[date] = {};
                 }
 
-                // [최종 수정!] 정확한 필드명인 DDISH_NM을 사용한다.
+                // [최종 수정!] 로그에서 확인된 DDISH_NM 필드와 <br/> 줄바꿈을 사용한다.
                 const menuInfo = {
                     calories: item.CAL_INFO,
                     menu: (item.DDISH_NM || "")
-                        .split(/<br\s*\/?>/) // <br> 또는 <br/> 태그로 줄바꿈 처리
+                        .split('<br/>') 
                         .map(menu => menu.replace(/\s*\([\d\.]+\)/g, '').trim()) // 알레르기 정보 제거
                         .filter(m => m)
                 };
 
-                if (item.MMEAL_SC_NM === '중식') {
+                // [안정성 강화] MMEAL_SC_NM에 있을지 모를 공백을 제거하고 비교한다.
+                const mealType = (item.MMEAL_SC_NM || "").trim();
+
+                if (mealType === '중식') {
                     dailyMenus[date].lunch = menuInfo;
-                } else if (item.MMEAL_SC_NM === '석식') {
+                } else if (mealType === '석식') {
                     dailyMenus[date].dinner = menuInfo;
                 }
             });
