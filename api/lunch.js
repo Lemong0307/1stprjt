@@ -51,7 +51,7 @@ export default async function handler(request, response) {
 
             weekMenuData.forEach(item => {
                 console.log("급식 종류:", item.MMEAL_SC_NM);
-                const dateKey = formatKey(item.MLSV_YMD); // 날짜 포맷 변환
+                const dateKey = item.MLSV_YMD; // 원본 YYYYMMDD 그대로 사용
                 if (!dailyMenus[dateKey]) {
                     dailyMenus[dateKey] = {};
                 }
