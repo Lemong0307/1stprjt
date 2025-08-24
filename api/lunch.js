@@ -46,7 +46,7 @@ export default async function handler(request, response) {
 
         const dailyMenus = {};
 
-        if (data.mealServiceDietInfo && data.mealServiceDietInfo[1].row) {
+        if (data.mealServiceDietInfo?.[1]?.row) {
             const weekMenuData = data.mealServiceDietInfo[1].row;
 
             weekMenuData.forEach(item => {
@@ -58,7 +58,7 @@ export default async function handler(request, response) {
                 const menuInfo = {
                     calories: item.CAL_INFO,
                     menu: (item.DDISH_NM || "") // 🔹 필드명 수정
-                        .split(/<br\s*\/?>|\n/g)
+                        .split(/<br\s*\/?>|\r?\n/g)
                         .map(menu => menu.trim())
                         .filter(m => m)
                 };
