@@ -63,9 +63,11 @@ export default async function handler(request, response) {
                         .filter(m => m)
                 };
 
-                if (item.MMEAL_SC_NM === '중식') {
+                const mealType = item.MMEAL_SC_NM.replace(/\s/g, ''); // 공백 제거
+
+                if (mealType.includes('중식')) {
                     dailyMenus[dateKey].lunch = menuInfo;
-                } else if (item.MMEAL_SC_NM === '석식') {
+                } else if (mealType.includes('석식')) {
                     dailyMenus[dateKey].dinner = menuInfo;
                 }
             });
