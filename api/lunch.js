@@ -50,6 +50,7 @@ export default async function handler(request, response) {
             const weekMenuData = data.mealServiceDietInfo[1].row;
 
             weekMenuData.forEach(item => {
+                console.log("급식 종류:", item.MMEAL_SC_NM);
                 const dateKey = formatKey(item.MLSV_YMD); // 날짜 포맷 변환
                 if (!dailyMenus[dateKey]) {
                     dailyMenus[dateKey] = {};
