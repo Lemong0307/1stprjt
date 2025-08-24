@@ -1,6 +1,6 @@
 // 이 파일은 Node.js 환경에서 실행됩니다.
 // Vercel이 이 파일을 자동으로 서버처럼 동작하게 만들어줍니다.
-// 최종 디버깅 버전 (원본 데이터 확인용)
+// 최종 완성 버전 (필드명 수정 및 안정성 강화)
 
 function formatDate(date) {
     const year = date.getFullYear();
@@ -16,6 +16,7 @@ export default async function handler(request, response) {
     const dayOfWeek = kstTime.getDay();
     let monday = new Date(kstTime);
 
+    // 평일이면 이번 주 월요일, 주말이면 다음 주 월요일을 찾는 안정적인 로직
     if (dayOfWeek >= 1 && dayOfWeek <= 5) { monday.setDate(kstTime.getDate() - (dayOfWeek - 1)); } 
     else if (dayOfWeek === 6) { monday.setDate(kstTime.getDate() + 2); } 
     else { monday.setDate(kstTime.getDate() + 1); }
@@ -31,6 +32,7 @@ export default async function handler(request, response) {
     try {
         const apiResponse = await fetch(URL);
         const data = await apiResponse.json();
+
         const dailyMenus = {};
 
         if (data.mealServiceDietInfo && data.mealServiceDietInfo[1].row) {
@@ -42,10 +44,13 @@ export default async function handler(request, response) {
                     dailyMenus[date] = {};
                 }
 
-                // [최종 수정!] 메뉴를 가공하지 않고 원본 문자열 그대로 보낸다.
+                // [최종 수정!] 정확한 필드명인 DDISH_NM을 사용한다.
                 const menuInfo = {
                     calories: item.CAL_INFO,
-                    menu: item.DDISH_INFO || "[메뉴 정보 없음]"
+                    menu: (item.DDISH_NM || "")
+                        .split(/<br\s*\/?>/) // <br> 또는 <br/> 태그로 줄바꿈 처리
+                        .map(menu => menu.replace(/\s*\([\d\.]+\)/g, '').trim()) // 알레르기 정보 제거
+                        .filter(m => m)
                 };
 
                 if (item.MMEAL_SC_NM === '중식') {
