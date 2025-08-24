@@ -87,17 +87,18 @@
                         html += `<div class="font-bold text-lg mb-2 text-center">${dateString} (${dayName})</div>`;
                         
                         let contentAdded = false;
+                        // [최종 수정!] 서버에서 받은 원본 메뉴(문자열)를 그대로 표시한다.
                         if (dayData && dayData.lunch) {
-                            html += `<div><h4 class="font-semibold text-blue-600 mb-1">중식</h4><ul class="text-sm space-y-1">`;
-                            dayData.lunch.menu.forEach(menu => { html += `<li>- ${menu}</li>`; });
-                            html += `</ul></div>`;
+                            html += `<div><h4 class="font-semibold text-blue-600 mb-1">중식</h4>`;
+                            const formattedMenu = (dayData.lunch.menu || "").replace(/\n/g, '<br>');
+                            html += `<p class="text-sm">${formattedMenu}</p></div>`;
                             contentAdded = true;
                         }
                         if (dayData && dayData.dinner) {
                             if(contentAdded) html += `<hr class="my-3">`;
-                            html += `<div><h4 class="font-semibold text-green-600 mb-1">석식</h4><ul class="text-sm space-y-1">`;
-                            dayData.dinner.menu.forEach(menu => { html += `<li>- ${menu}</li>`; });
-                            html += `</ul></div>`;
+                            html += `<div><h4 class="font-semibold text-green-600 mb-1">석식</h4>`;
+                            const formattedMenu = (dayData.dinner.menu || "").replace(/\n/g, '<br>');
+                            html += `<p class="text-sm">${formattedMenu}</p></div>`;
                             contentAdded = true;
                         }
 
